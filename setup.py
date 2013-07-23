@@ -1,5 +1,4 @@
-from distutils.core import setup
-
+from setuptools import setup, find_packages
 
 setup(
     name = "django-backcap",
@@ -12,12 +11,11 @@ setup(
     packages = [
         "backcap",
     ],
-    include_package_data = True,
-    package_data = {
-        'backcap': [
-            'locale/*/*/*',
-        ]
-    },
+    packages=find_packages(),
+    include_package_data=True,
+    install_requires=["django-notification==1.0",
+                      "django-voting==0.2",
+                     ],
     zip_safe=False,
     classifiers = [
         "Development Status :: 3 - Alpha",
