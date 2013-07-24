@@ -17,7 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.conf import settings
+from tastypie.authentications import SessionAuthentication
+
 gettext = lambda s: s
+
+
 
 BACKCAP_NOTIFY_WHOLE_STAFF = getattr(settings,
                                      'BACKCAP_NOTIFY_WHOLE_STAFF',
@@ -30,3 +34,7 @@ BACKCAP_NOTIFIED_USERS = getattr(settings,
 BACKCAP_INDEX_FEEDBACKS = getattr(settings,
                                   'BACKCAP_INDEX_FEEDBACKS',
                                   False)
+
+BACKCAP_API_AUTHENTICATION_CLASS = getattr(settings,
+                                     'BACKCAP_API_AUTHENTICATION_CLASS',
+                                     SessionAuthentication)
