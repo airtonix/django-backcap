@@ -17,7 +17,7 @@ class FeedbackResource(ModelResource):
         # simple guardian permission codes leaning 
         # on default model permission codes for now.
         authorization = GuardianAuthorization()
-        authentication =  settings.AUTHENTICATION_CLASS
+        authentication =  settings.BACKCAP_API_AUTHENTICATION_CLASS
         queryset = Feedback.objects.all()
         resource_name = 'feedback'
         always_return_data = True
