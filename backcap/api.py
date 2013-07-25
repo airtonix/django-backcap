@@ -1,23 +1,25 @@
 import logging
 
 from tastypie.resources import ModelResource, ALL
-from tastypie.authentication import MultiAuthentication, ApiKeyAuthentication, SessionAuthentication
 from backcap.models import Feedback
 from guardianpie.authorization import GuardianAuthorization
 
-from . import settings 
-
+from . import settings
+from .utils import get_class
 
 logger = logging.getLogger(__name__)
+
+
+AuthenticationClass = get_class(settings.BACKCAP_API_AUTHENTICATION_CLASS)
 
 
 class FeedbackResource(ModelResource):
 
     class Meta:
-        # simple guardian permission codes leaning 
+        # simple guardian permission codes leaning
         # on default model permission codes for now.
         authorization = GuardianAuthorization()
-        authentication =  settings.BACKCAP_API_AUTHENTICATION_CLASS
+        authentication = AuthenticationClass()
         queryset = Feedback.objects.all()
         resource_name = 'feedback'
         always_return_data = True
@@ -46,8 +48,9 @@ class FeedbackResource(ModelResource):
         return self.pick(bundle.obj.STATUS_CHOICES, bundle.obj.status)
 
     def obj_create(self, bundle, **kwargs):
-        """ When new feedback instance is created, ensure that the creating user 
+        """ When new feedback instance is created, ensure that the creating user
             is assigned to `user` and the initial `follower`
         """
-        return super(FeedbackResource, self).obj_create(bundle, user=bundle.request.user, follower=bundle.request.user)
-
+        return super(FeedbackResource, self).obj_create(bundle,
+                                                        user=bundle.request.user,
+                                                        follower=bundle.request.user)
