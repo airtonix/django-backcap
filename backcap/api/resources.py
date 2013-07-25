@@ -53,3 +53,7 @@ class FeedbackResource(resources.ModelResource):
         return super(FeedbackResource, self).obj_create(bundle,
                                                         user=bundle.request.user,
                                                         follower=bundle.request.user)
+
+#
+# entry point for django-piehunter 
+EnabledResources = (FeedbackResource, )
