@@ -1,31 +1,30 @@
 import logging
 
-from tastypie.resources import ModelResource, ALL
-from backcap.models import Feedback
-from guardianpie.authorization import GuardianAuthorization
+from tastypie import resources
+from guardianpie import authorization
 
-from . import settings
-from .utils import get_class
+from .. import models
+from .. import settings
+from .. import utils
+
 
 logger = logging.getLogger(__name__)
+AuthenticationClass = utils.get_class(settings.BACKCAP_API_AUTHENTICATION_CLASS)
 
 
-AuthenticationClass = get_class(settings.BACKCAP_API_AUTHENTICATION_CLASS)
-
-
-class FeedbackResource(ModelResource):
+class FeedbackResource(resources.ModelResource):
 
     class Meta:
         # simple guardian permission codes leaning
         # on default model permission codes for now.
-        authorization = GuardianAuthorization()
+        authorization = authorization.GuardianAuthorization()
         authentication = AuthenticationClass()
-        queryset = Feedback.objects.all()
+        queryset = models.Feedback.objects.all()
         resource_name = 'feedback'
         always_return_data = True
-        filtering = {'kind': ALL,
-                     'title': ALL,
-                     'text': ALL
+        filtering = {'kind': resources.ALL,
+                     'title': resources.ALL,
+                     'text': resources.ALL
                      }
 
     def pick(self, collection, item):
