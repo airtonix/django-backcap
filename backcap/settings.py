@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.conf import settings
-from tastypie.authentications import SessionAuthentication
 
 gettext = lambda s: s
 
@@ -36,5 +35,6 @@ BACKCAP_INDEX_FEEDBACKS = getattr(settings,
                                   False)
 
 BACKCAP_API_AUTHENTICATION_CLASS = getattr(settings,
-                                     'BACKCAP_API_AUTHENTICATION_CLASS',
-                                     SessionAuthentication)
+                                           'BACKCAP_API_AUTHENTICATION_CLASS',
+                                           'tastypie.authentication.SessionAuthentication')
+
