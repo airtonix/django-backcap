@@ -63,36 +63,15 @@ class BaseAuthorization(DjangoAuthorization):
         return self.generic_item_check(object_list, bundle)
 
 
-class GuestWritableAuthorization(Authorization):
+class GuestWritableAuthorization(BaseAuthorization):
     """
         Use case scenario: contact form
     """
     empty_object_list = []
 
-    def read_list(self, object_list, bundle):
-        raise Unauthorized()
-
-    def create_list(self, object_list, bundle):
-        raise Unauthorized()
-
-    def update_list(self, object_list, bundle):
-        raise Unauthorized()
-
-    def delete_list(self, object_list, bundle):
-        raise Unauthorized()
-
-    def read_detail(self, object_list, bundle):
-        raise Unauthorized()
-
     def create_detail(self, object_list, bundle):
         # allow creation
         return True
-
-    def update_detail(self, object_list, bundle):
-        raise Unauthorized()
-
-    def delete_detail(self, object_list, bundle):
-        raise Unauthorized()
 
 
 class UserObjectOnlyAuthorization(BaseAuthorization):
@@ -116,10 +95,21 @@ class UserRelatedObjectsOnlyAuthorization(BaseAuthorization):
 
     def generic_item_check(self, object_list, bundle):
         super(UserRelatedObjectsOnlyAuthorization, self).generic_item_check(object_list, bundle)
-        if not getattr(bundle.obj, self.user_field) == bundle.request.user:
+        user = bundle.request.user
+
+        if not user.is_authenticated():
+            raise Unauthorized("You are not allowed to access that resource.")
+        if not getattr(bundle.obj, self.user_field) == user:
             raise Unauthorized("You are not allowed to access that resource.")
         return True
 
     def generic_list_check(self, object_list, bundle):
         super(UserRelatedObjectsOnlyAuthorization, self).generic_list_check(object_list, bundle)
-        return object_list.filter(**{self.user_field: bundle.request.user})
+        user = bundle.request.user
+        user.is_authenticated()
+        return object_list.filter(**{self.user_field: user.id})
+
+
+class GuestWritableUserObjectsReadOnlyAuthorization(GuestWritableAuthorization, UserRelatedObjectsOnlyAuthorization):
+    """ Long class name is long."""
+    pass
