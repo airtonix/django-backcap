@@ -1,6 +1,9 @@
 import logging
 
+from django.contrib.auth.models import User
+
 from tastypie import resources
+from tastypie import fields
 
 from .. import models
 from .. import settings
@@ -10,6 +13,11 @@ from .. import utils
 logger = logging.getLogger(__name__)
 AuthenticationClass = utils.get_class(settings.BACKCAP_API_AUTHENTICATION_CLASS)
 AuthorizationClass = utils.get_class(settings.BACKCAP_API_AUTHORIZATION_CLASS)
+
+
+class UserResource(resources.ModelResource):
+    class Meta:
+        queryset = User.objects.all()
 
 
 class FeedbackResource(resources.ModelResource):
@@ -50,10 +58,16 @@ class FeedbackResource(resources.ModelResource):
         """ When new feedback instance is created, ensure that the creating user
             is assigned to `user` and the initial `follower`
         """
+        user = bundle.request.user
+        email = bundle.data.get("email", None)
+        created = False
+        if not user.is_authenticated() and email:
+            user, created = User.objects.get_or_create(username=email, email=email)
+
         return super(FeedbackResource, self).obj_create(bundle,
-                                                        user=bundle.request.user,
-                                                        follower=bundle.request.user)
+                                                        user=user,
+                                                        follower=user)
 
 #
-# entry point for django-piehunter 
+# entry point for django-piehunter
 EnabledResources = (FeedbackResource, )
