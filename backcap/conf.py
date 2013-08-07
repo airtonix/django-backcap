@@ -31,5 +31,6 @@ class Configuration(AppConf):
     NOTIFIED_USERS = None
     INDEX_FEEDBACKS = False
     API_AUTHENTICATION_CLASS = 'tastypie.authentication.Authentication'
-    API_AUTHORIZATION_CLASS = 'backcap.api.authorization.GuestWritableAuthorization'
-    API_VALIDATION_CLASS = 'backcap.api.authorization.GuestWritableAuthorization'
+    API_AUTHORIZATION_CLASS = 'backcap.api.authorization.GuestWritableUserObjectsReadOnlyAuthorization'
+    API_VALIDATION_CLASS = 'backcap.api.validations.FeedbackFormValidation'
+    API_THROTTLE_RATE = 10
