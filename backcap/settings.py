@@ -37,6 +37,6 @@ BACKCAP_API_AUTHENTICATION_CLASS = getattr(settings,
                                            'BACKCAP_API_AUTHENTICATION_CLASS',
                                            'tastypie.authentication.SessionAuthentication')
 
-BACKCAP_API_AUTHENTICATION_CLASS = getattr(settings,
-                                           'BACKCAP_API_AUTHORIZATION_CLASS',
-                                           'backcap.api.authorization.GuestWritableAuthorization')
+BACKCAP_API_AUTHORIZATION_CLASS = getattr(settings,
+                                          'BACKCAP_API_AUTHORIZATION_CLASS',
+                                          'backcap.api.authorization.GuestWritableAuthorization')
