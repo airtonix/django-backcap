@@ -19,6 +19,8 @@
 from haystack import indexes
 
 from .models import Feedback
+from .conf import settings
+
 
 class FeedbackIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
@@ -31,7 +33,3 @@ class FeedbackIndex(indexes.SearchIndex, indexes.Indexable):
         Used when the entire index for model is updated.
         """
         return self.get_model().objects.all()
-
-
-
-

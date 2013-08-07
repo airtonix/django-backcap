@@ -17,13 +17,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.conf.urls.defaults import patterns, url
-from django.conf import settings
 from django.views.generic.base import RedirectView
 
-import views
+from . import views
+from .conf import settings
+
 
 urlpatterns = patterns('',
-    (r'^$', RedirectView.as_view(url='list')),  
+    url(r'^$', RedirectView.as_view(url='list')),
     url(r'^new/$', views.feedback_new, name='feedback-new'),
     url(r'^list/$', views.FeedbackListView.as_view(), name='feedback-list'),
     url(r'^list/(?P<qtype>\w+)/$', views.FeedbackListView.as_view(), name='feedback-list'),

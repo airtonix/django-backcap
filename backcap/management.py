@@ -23,14 +23,10 @@ from django.utils.translation import ugettext_noop as _
 import notification.models as notification
 from notification.models import NoticeType
 
+from .conf import settings
+
+
 @receiver(post_syncdb, sender=notification)
 def create_notice_types(app, created_models, verbosity, **kwargs):
     NoticeType.create("feedback_new", _("New feedback"), _("A new feedback was submitted"))
     NoticeType.create("feedback_updated", _("Feedback updated"), _("A feedback was updated"))
-
-    
-
-
-
-
-

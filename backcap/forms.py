@@ -21,6 +21,8 @@ from django.forms import CharField, HiddenInput, ChoiceField
 from django.forms import RadioSelect
 
 from .models import Feedback
+from .conf import settings
+
 
 class FeedbackNewForm(forms.ModelForm):
     class Meta:
@@ -29,7 +31,7 @@ class FeedbackNewForm(forms.ModelForm):
 
     referer = CharField(widget=HiddenInput, required=False)
     kind = ChoiceField(widget=RadioSelect(), choices=Feedback.KIND_CHOICES)
-    
+
 
 class FeedbackEditForm(forms.ModelForm):
     class Meta:
@@ -38,4 +40,3 @@ class FeedbackEditForm(forms.ModelForm):
     duplicate_of = forms.ModelChoiceField(queryset=Feedback.objects.all(),
                                           widget=forms.TextInput,
                                           required=False)
-
