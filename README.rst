@@ -59,6 +59,10 @@ Backcap can make use of:
 
 - ``haystack`` (for feedback indexing)
 - ``south``
+- ``django-tastypie``
+- ``django-guardian``
+- ``django-guardianpie``
+
 
 Installation
 ============
@@ -82,7 +86,7 @@ Installation
 				    'backcap.context_processors.backcap_forms',
 				    ...
 				    )
-
+				    
 4. Run syncdb and migrations::
 
         $ ./manage.py syncdb
@@ -100,5 +104,28 @@ Installation
 
 
 
+RESTful api
+-----------
+
+1. Make sure you have the required packages installed::
+
+	django-guardian==1.1.1
+	django-guardianpie==0.0.3
+	django-tastypie==0.9.15
+
+2. somewhere in your project/application, make sure you setup urls for the resource. Usually this is done in your `urls.py`::
+
+	from tastypie.api import Api
+	from backcap.api.resources import FeedbackResource
+	
+	v1_api = Api(api_name='v1')
+	v1_api.register(FeedbackResource())
+	
+	urlpatterns = patterns('',
+                       surl(r'^api/',          include(v1_api.urls)),
+                       )
 
 
+3. play around with the API with something like the postman extension for google chrome.
+
+   https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm?hl=en
