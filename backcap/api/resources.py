@@ -4,10 +4,11 @@ from django.contrib.auth.models import User
 
 from tastypie import resources
 from tastypie import fields
+from tastypie.throttle import BaseThrottle
 
 from .. import models
-from .. import settings
 from .. import utils
+from ..conf import settings
 
 
 logger = logging.getLogger(__name__)
@@ -22,15 +23,15 @@ class UserResource(resources.ModelResource):
 
 
 class FeedbackResource(resources.ModelResource):
-    followers = fields.ToManyField(to=UserResource, attribute="followers_set")
+    user = fields.ForeignKey(to=UserResource, blank=True, null=True, attribute='user')
+    kind = fields.CharField(blank=True, null=True, attribute='user')
 
     class Meta:
-        # simple guardian permission codes leaning
-        # on default model permission codes for now.
         authorization = AuthorizationClass()
         authentication = AuthenticationClass()
-        validation = ValidationClass()
+        # validation = ValidationClass()
         queryset = models.Feedback.objects.all()
+        throttle = BaseThrottle(throttle_at=settings.BACKCAP_API_THROTTLE_RATE)
         resource_name = 'feedback'
         always_return_data = True
         filtering = {'kind': resources.ALL,
@@ -68,9 +69,7 @@ class FeedbackResource(resources.ModelResource):
         if not user.is_authenticated() and email:
             user, created = User.objects.get_or_create(username=email, email=email)
 
-        return super(FeedbackResource, self).obj_create(bundle,
-                                                        user=user,
-                                                        followers=user)
+        return super(FeedbackResource, self).obj_create(bundle, user=user)
 
 #
 # entry point for django-piehunter
