@@ -1,7 +1,6 @@
 import logging
 
 from tastypie import resources
-from guardianpie import authorization
 
 from .. import models
 from .. import settings
@@ -10,6 +9,7 @@ from .. import utils
 
 logger = logging.getLogger(__name__)
 AuthenticationClass = utils.get_class(settings.BACKCAP_API_AUTHENTICATION_CLASS)
+AuthorizationClass = utils.get_class(settings.BACKCAP_API_AUTHORIZATION_CLASS)
 
 
 class FeedbackResource(resources.ModelResource):
@@ -17,7 +17,7 @@ class FeedbackResource(resources.ModelResource):
     class Meta:
         # simple guardian permission codes leaning
         # on default model permission codes for now.
-        authorization = authorization.GuardianAuthorization()
+        authorization = AuthorizationClass()
         authentication = AuthenticationClass()
         queryset = models.Feedback.objects.all()
         resource_name = 'feedback'
